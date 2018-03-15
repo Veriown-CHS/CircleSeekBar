@@ -14,6 +14,7 @@
         <item name="textAppearance">@style/CircleProgressViewStyle.TextAppearance</item>
         <item name="showCounter">true</item>
         <item name="isClockwise">true</item>
+		<item name="dotImage">0</item>
     </style>
 
     <style name="CircleProgressViewStyle.TextAppearance">

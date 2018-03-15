@@ -16,13 +16,11 @@
 
 package ru.bullyboo.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
@@ -34,7 +32,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -142,6 +139,8 @@ public class CircleSeekBar extends FrameLayout {
                 R.styleable.CircleSeekBar_dotRadius, 20 * dp);
         dotColor = array.getColor(
                 R.styleable.CircleSeekBar_dotColor, progressCircleLineColor);
+        dotImage = array.getColor(
+                R.styleable.CircleSeekBar_dotImage, dotImage);
 
         maxValue = array.getInt(
                 R.styleable.CircleSeekBar_maxValue, DEFAULT_MAX_VALUE);
