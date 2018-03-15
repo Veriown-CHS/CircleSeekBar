@@ -18,6 +18,7 @@ package ru.bullyboo.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -316,11 +317,16 @@ public class CircleSeekBar extends FrameLayout {
 
         float y = (float) (Math.sin(Math.toRadians(degrees)) * baseCircleRadius + centerY);
 
-        Drawable drawable = getResources().getDrawable(dotImage, null);
-        VectorDrawable vectorDrawable =  (VectorDrawable) drawable;
-        vectorDrawable.setBounds(0, 0, 36, 36);
-        canvas.translate(x-15, y-18);
-        vectorDrawable.draw(canvas);
+        try {
+            Drawable drawable = getResources().getDrawable(dotImage, null);
+            VectorDrawable vectorDrawable = (VectorDrawable) drawable;
+            vectorDrawable.setBounds(0, 0, 36, 36);
+            canvas.translate(x - 15, y - 18);
+            vectorDrawable.draw(canvas);
+        }
+        catch (Resources.NotFoundException ex) {
+            Log.e("Resources","" + ex);
+        }
     }
 
     //Draw vertical line at 0 degree position
