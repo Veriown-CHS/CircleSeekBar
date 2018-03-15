@@ -139,7 +139,7 @@ public class CircleSeekBar extends FrameLayout {
                 R.styleable.CircleSeekBar_dotRadius, 20 * dp);
         dotColor = array.getColor(
                 R.styleable.CircleSeekBar_dotColor, progressCircleLineColor);
-        dotImage = array.getColor(
+        dotImage = array.getResourceId(
                 R.styleable.CircleSeekBar_dotImage, dotImage);
 
         maxValue = array.getInt(
@@ -322,9 +322,10 @@ public class CircleSeekBar extends FrameLayout {
             vectorDrawable.setBounds(0, 0, 36, 36);
             canvas.translate(x - 15, y - 18);
             vectorDrawable.draw(canvas);
-        }
-        catch (Resources.NotFoundException ex) {
+        } catch (Resources.NotFoundException ex) {
             Log.e("Resources","" + ex);
+        } catch (Exception e) {
+            Log.e("Exception","" + e);
         }
     }
 
