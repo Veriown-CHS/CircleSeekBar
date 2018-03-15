@@ -21,7 +21,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -39,10 +42,7 @@ import android.widget.TextView;
  * by BullyBoo on 01.12.2017.
  */
 
-public class CircleSeekBar extends FrameLayout {
-
-    private static final int GRAY_COLOR = 0xffebebed;
-    private static final int BLUE_COLOR = 0xff007eff;
+public class CircularSeekBar extends FrameLayout {
 
     private static final int DEFAULT_MAX_VALUE = 100;
     private static final int DEFAULT_MIN_VALUE = 0;
@@ -55,8 +55,8 @@ public class CircleSeekBar extends FrameLayout {
     private int progressCircleLineColor;
 
     private float dotRadius;
-
     private int dotColor;
+    private int dotImage;
 
     private int maxValue;
     private int minValue;
@@ -101,21 +101,21 @@ public class CircleSeekBar extends FrameLayout {
 
     private OnValueChangedListener onValueChangedListener;
 
-    public CircleSeekBar(Context context) {
+    public CircularSeekBar(Context context) {
         this(context, null);
     }
 
-    public CircleSeekBar(Context context, @Nullable AttributeSet attrs) {
+    public CircularSeekBar(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, R.attr.circleProgressViewStyle);
     }
 
-    public CircleSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CircularSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr, R.style.CircleProgressViewStyle);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public CircleSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CircularSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs, defStyleAttr, defStyleRes);
     }
@@ -133,14 +133,14 @@ public class CircleSeekBar extends FrameLayout {
                 R.styleable.CircleSeekBar_progressCircleLineWidth, 2 * dp);
 
         backgroundCircleLineColor = array.getColor(
-                R.styleable.CircleSeekBar_backgroundCircleLineColor, GRAY_COLOR);
+                R.styleable.CircleSeekBar_backgroundCircleLineColor, backgroundCircleLineColor);
         progressCircleLineColor = array.getColor(
-                R.styleable.CircleSeekBar_progressCircleLineColor, BLUE_COLOR);
+                R.styleable.CircleSeekBar_progressCircleLineColor, progressCircleLineColor);
 
         dotRadius = array.getDimension(
                 R.styleable.CircleSeekBar_dotRadius, 20 * dp);
         dotColor = array.getColor(
-                R.styleable.CircleSeekBar_dotColor, BLUE_COLOR);
+                R.styleable.CircleSeekBar_dotColor, progressCircleLineColor);
 
         maxValue = array.getInt(
                 R.styleable.CircleSeekBar_maxValue, DEFAULT_MAX_VALUE);
@@ -159,13 +159,9 @@ public class CircleSeekBar extends FrameLayout {
         array.recycle();
 
         if(minValue > maxValue){
-            Log.e("CircleSeekBarLog",
-                    "MIN VALUE CAN`T BE LARGER OF MAX VALUE");
             minValue = maxValue;
         }
         if(value > maxValue || value < minValue){
-            Log.e("CircleSeekBarLog",
-                    "VALUE CAN`T BE LESS OF MIN VALUE OR LARGER OF MAX VALUE");
             value = minValue;
         }
 
@@ -220,7 +216,7 @@ public class CircleSeekBar extends FrameLayout {
             addView(textView, layoutParams);
         }
 
-        textView.measure(View.MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST),
+        textView.measure(MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.AT_MOST),
                 MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.AT_MOST));
 
         int curWidth = textView.getMeasuredWidth();
@@ -249,7 +245,6 @@ public class CircleSeekBar extends FrameLayout {
         baseCircleRadius -= dotRadius;
 
 //        calculating centerX and centerY
-
         int paddingLeft;
         int paddingTop = getPaddingTop();
         int paddingRight;
@@ -264,16 +259,12 @@ public class CircleSeekBar extends FrameLayout {
         }
 
         float innerWidth = width - paddingLeft - paddingRight;
-
         centerX = getPaddingLeft()  + innerWidth / 2;
-
         float innerHeight = height - paddingTop - paddingBottom;
-
         centerY = getPaddingTop() + innerHeight / 2;
 
 //        creating new rectF for drawing progress arc
         progressArc = new RectF();
-
         progressArc.set(centerX - baseCircleRadius,
                 centerY - baseCircleRadius,
                 centerX + baseCircleRadius,
@@ -286,106 +277,9 @@ public class CircleSeekBar extends FrameLayout {
 
         drawBackgroundCircle(canvas);
         drawProgressArc(canvas);
+        drawLine(canvas);
         drawDot(canvas);
     }
-
-    private boolean isOnArc = false;
-
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                isOnArc = isOnArc(event);
-                if(callback != null){
-                    callback.onStartScrolling(value);
-                }
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                if(isOnArc){
-                    double angel = Math.PI * 180 / Math.PI;
-
-                    double degrees = Math.acos(computeCos(event.getX(), event.getY())) * 180 / Math.PI;
-                    if(!isClockwise){
-                        if(event.getX() < width / 2){
-                            angel -= degrees;
-                        } else {
-                            angel += degrees;
-                        }
-                    } else {
-                        if(event.getX() < width / 2){
-                            angel += degrees;
-                        } else {
-                            angel -= degrees;
-                        }
-                    }
-
-                    if(Math.abs(previousAngel - angel) > 180f){
-                            if(value != minValue && value != maxValue){
-                            value = maxValue - value > (maxValue - minValue) / 2 ?
-                                    minValue : maxValue;
-
-                            if(textView != null){
-                                textView.setText(String.valueOf(value));
-                            }
-
-                            if(onValueChangedListener != null){
-                                onValueChangedListener.onValueChanged(value);
-                            }
-
-                            invalidate();
-                            return true;
-                        }
-                        return false;
-                    }
-
-                    float shift = (float) (angel - previousAngel);
-
-                    totalAngel += shift;
-
-                    previousAngel = (float) angel;
-
-                    if(angel >= 360){
-                        value = maxValue;
-                    } else if(angel <= 0){
-                        value = minValue;
-                    } else {
-                        value = value((float) angel);
-                    }
-
-
-                    if(totalAngel >= 360){
-                        totalAngel = 360;
-                        value = maxValue;
-                    } else if(totalAngel <= 0){
-                        totalAngel = 0;
-                        value = minValue;
-                    } else {
-                        value = value((float) angel);
-                    }
-
-                    if(textView != null){
-                        textView.setText(String.valueOf(value));
-                    }
-
-                    if(onValueChangedListener != null){
-                        onValueChangedListener.onValueChanged(value);
-                    }
-
-                    invalidate();
-                }
-                return true;
-            case MotionEvent.ACTION_UP:
-                isOnArc = false;
-                if(callback != null){
-                    callback.onEndScrolling(value);
-                }
-                return true;
-        }
-
-        return false;
-    }
-
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -422,7 +316,23 @@ public class CircleSeekBar extends FrameLayout {
 
         float y = (float) (Math.sin(Math.toRadians(degrees)) * baseCircleRadius + centerY);
 
-        canvas.drawCircle(x, y, dotRadius, dotPaint);
+        Drawable drawable = getResources().getDrawable(dotImage, null);
+        VectorDrawable vectorDrawable =  (VectorDrawable) drawable;
+        vectorDrawable.setBounds(0, 0, 36, 36);
+        canvas.translate(x-15, y-18);
+        vectorDrawable.draw(canvas);
+    }
+
+    //Draw vertical line at 0 degree position
+    private void drawLine(Canvas canvas){
+        float degrees;
+        degrees = (float) 262.2;
+        float x = (float) (Math.cos(Math.toRadians(degrees)) * baseCircleRadius + centerX);
+        float y = (float) (Math.sin(Math.toRadians(degrees)) * baseCircleRadius + centerY);
+        Paint p = new Paint();
+        p.setColor(progressCircleLineColor);
+        p.setStrokeWidth(5);
+        canvas.drawLine(x+16, y+8, x+16, y-10, p);
     }
 
     private float degrees(float value){

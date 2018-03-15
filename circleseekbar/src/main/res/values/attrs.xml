@@ -16,6 +16,7 @@
         <attr name="textAppearance" format="reference"/>
         <attr name="showCounter" format="boolean"/>
         <attr name="isClockwise" format="boolean"/>
+        <attr name="dotImage" format="integer"/>
     </declare-styleable>
 
 </resources>
