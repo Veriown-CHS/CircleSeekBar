@@ -42,7 +42,7 @@ import android.widget.TextView;
  * by BullyBoo on 01.12.2017.
  */
 
-public class CircularSeekBar extends FrameLayout {
+public class CircleSeekBar extends FrameLayout {
 
     private static final int DEFAULT_MAX_VALUE = 100;
     private static final int DEFAULT_MIN_VALUE = 0;
@@ -101,21 +101,21 @@ public class CircularSeekBar extends FrameLayout {
 
     private OnValueChangedListener onValueChangedListener;
 
-    public CircularSeekBar(Context context) {
+    public CircleSeekBar(Context context) {
         this(context, null);
     }
 
-    public CircularSeekBar(Context context, @Nullable AttributeSet attrs) {
+    public CircleSeekBar(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, R.attr.circleProgressViewStyle);
     }
 
-    public CircularSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CircleSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr, R.style.CircleProgressViewStyle);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public CircularSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CircleSeekBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs, defStyleAttr, defStyleRes);
     }
