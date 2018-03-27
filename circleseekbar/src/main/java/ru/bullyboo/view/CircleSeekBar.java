@@ -307,9 +307,9 @@ public class CircleSeekBar extends FrameLayout {
         float degrees;
 
         if(isClockwise){
-            degrees = degrees(value) - 90;
+            degrees = degrees(value) - 95;
         } else {
-            degrees = - degrees(value) - 90;
+            degrees = - degrees(value) - 95;
         }
 
         float x = (float) (Math.cos(Math.toRadians(degrees)) * baseCircleRadius + centerX);
@@ -319,7 +319,7 @@ public class CircleSeekBar extends FrameLayout {
             Drawable drawable = getResources().getDrawable(dotImage, null);
             VectorDrawable vectorDrawable = (VectorDrawable) drawable;
             vectorDrawable.setBounds(0, 0, 36, 36);
-            canvas.translate(x - 15, y - 30);
+            canvas.translate(x - 15, y - 18);
             vectorDrawable.draw(canvas);
         } catch (Resources.NotFoundException ex) {
             Log.e("Resources","" + ex);
