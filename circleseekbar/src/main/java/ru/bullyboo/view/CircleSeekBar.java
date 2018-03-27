@@ -313,7 +313,6 @@ public class CircleSeekBar extends FrameLayout {
         }
 
         float x = (float) (Math.cos(Math.toRadians(degrees)) * baseCircleRadius + centerX);
-
         float y = (float) (Math.sin(Math.toRadians(degrees)) * baseCircleRadius + centerY);
 
         try {
