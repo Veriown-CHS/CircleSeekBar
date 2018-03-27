@@ -320,7 +320,7 @@ public class CircleSeekBar extends FrameLayout {
             Drawable drawable = getResources().getDrawable(dotImage, null);
             VectorDrawable vectorDrawable = (VectorDrawable) drawable;
             vectorDrawable.setBounds(0, 0, 36, 36);
-            canvas.translate(x - 15, y - 18);
+            canvas.translate(x - 15, y - 30);
             vectorDrawable.draw(canvas);
         } catch (Resources.NotFoundException ex) {
             Log.e("Resources","" + ex);
