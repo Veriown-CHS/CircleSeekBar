@@ -345,7 +345,7 @@ public class CircleSeekBar extends FrameLayout {
         Paint p = new Paint();
         p.setColor(Color.BLACK);
         p.setStrokeWidth(verticalLineWidth);
-        canvas.drawLine(x+16, y+8, x+16, y-10, p);
+        canvas.drawLine(x+17, y+8, x+17, y-10, p);
     }
 
     private float degrees(float value){
