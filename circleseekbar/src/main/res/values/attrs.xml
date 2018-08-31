@@ -17,6 +17,7 @@
         <attr name="showCounter" format="boolean"/>
         <attr name="isClockwise" format="boolean"/>
         <attr name="dotImage" format="reference"/>
+        <attr name="verticalLineWidth" format="dimension"/>
     </declare-styleable>
 
 </resources>

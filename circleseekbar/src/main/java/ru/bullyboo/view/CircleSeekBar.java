@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -85,6 +86,9 @@ public class CircleSeekBar extends FrameLayout {
 
     private RectF progressArc;
 
+    // Line
+    private float verticalLineWidth;
+
     public interface Callback{
         void onStartScrolling(int startValue);
 
@@ -141,6 +145,10 @@ public class CircleSeekBar extends FrameLayout {
                 R.styleable.CircleSeekBar_dotColor, progressCircleLineColor);
         dotImage = array.getResourceId(
                 R.styleable.CircleSeekBar_dotImage, dotImage);
+
+        //Line
+        verticalLineWidth = array.getDimension(
+                R.styleable.CircleSeekBar_verticalLineWidth, 2 * dp);
 
         maxValue = array.getInt(
                 R.styleable.CircleSeekBar_maxValue, DEFAULT_MAX_VALUE);
@@ -335,8 +343,8 @@ public class CircleSeekBar extends FrameLayout {
         float x = (float) (Math.cos(Math.toRadians(degrees)) * baseCircleRadius + centerX);
         float y = (float) (Math.sin(Math.toRadians(degrees)) * baseCircleRadius + centerY);
         Paint p = new Paint();
-        p.setColor(progressCircleLineColor);
-        p.setStrokeWidth(5);
+        p.setColor(Color.BLACK);
+        p.setStrokeWidth(verticalLineWidth);
         canvas.drawLine(x+16, y+8, x+16, y-10, p);
     }
 
